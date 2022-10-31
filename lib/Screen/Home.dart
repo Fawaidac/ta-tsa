@@ -1,8 +1,7 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:geocoding/geocoding.dart';
-import 'package:geolocator/geolocator.dart';
 import 'package:android_intent_plus/android_intent.dart';
+import 'package:ta_tsa/Controller/location_service.dart';
 import 'package:ta_tsa/Screen/Login.dart';
 import 'package:ta_tsa/Shared/shared.dart';
 
@@ -18,84 +17,35 @@ class _HomeState extends State<Home> {
     await FirebaseAuth.instance.signOut();
   }
 
-  // Position _myPosition = Position(
-  //     longitude: 0,
-  //     latitude: 0,
-  //     timestamp: DateTime.now(),
-  //     accuracy: 0,
-  //     altitude: 0.0,
-  //     heading: 0.0,
-  //     speed: 0.0,
-  //     speedAccuracy: 0.0);
-
-  var locationMessage = "";
-  void getCurrentLocation() async {
-    var position = await Geolocator.getCurrentPosition(
-        desiredAccuracy: LocationAccuracy.high);
-    var lastPosition = await Geolocator.getLastKnownPosition();
-    print(lastPosition);
-    var lat = position.latitude;
-    var long = position.longitude;
-    print("$lat,$long");
-    setState(() {
-      locationMessage = "Latitude : $lat , Longitude : $long";
-    });
-  }
-
-  //getLongLAT
-  Future<Position> _getGeoLocationPosition() async {
-    bool serviceEnabled;
-    LocationPermission permission;
-
-    serviceEnabled = await Geolocator.isLocationServiceEnabled();
-    //location service not enabled, don't continue
-    if (!serviceEnabled) {
-      await Geolocator.openLocationSettings();
-      return Future.error('Location service Not Enabled');
-    }
-    permission = await Geolocator.checkPermission();
-    if (permission == LocationPermission.denied) {
-      permission = await Geolocator.requestPermission();
-      if (permission == LocationPermission.denied) {
-        return Future.error('Location permission denied');
-      }
-    }
-
-    //permission denied forever
-    if (permission == LocationPermission.deniedForever) {
-      return Future.error(
-        'Location permission denied forever, we cannot access',
-      );
-    }
-    //continue accessing the position of device
-    return await Geolocator.getCurrentPosition(
-      desiredAccuracy: LocationAccuracy.high,
-    );
-  }
-
-  // //getAddress
-  Future<void> getAddressFromLongLat(Position position) async {
-    List<Placemark> placemarks =
-        await placemarkFromCoordinates(position.latitude, position.longitude);
-    print(placemarks);
-    Placemark place = placemarks[0];
-    setState(() {
-      address =
-          '${place.street}, ${place.subLocality}, ${place.locality}, ${place.postalCode}, ${place.country}';
-    });
-  }
-
-  // final _user = FirebaseAuth.instance.currentUser!;
   final cari = TextEditingController();
-  // int _counter = 0;
-  String location = 'lat: long:';
-  String address = 'Mencari lokasi...';
+
+  LocationService locationService = LocationService();
+
+  double latitude = 0;
+  double longitude = 0;
+
+  @override
+  void dispose() {
+    locationService.dispose();
+    super.dispose();
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    locationService.locationStream.listen((userLocation) {
+      setState(() {
+        latitude = userLocation.latitude;
+        longitude = userLocation.longitude;
+      });
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text("Lokasi"),
+        title: const Text("Lokasi"),
         backgroundColor: redColor,
         automaticallyImplyLeading: false,
         centerTitle: true,
@@ -114,15 +64,6 @@ class _HomeState extends State<Home> {
                 ),
               ),
               const SizedBox(
-                height: 10.0,
-              ),
-              Text(
-                location,
-                style: const TextStyle(
-                  fontSize: 16.0,
-                ),
-              ),
-              const SizedBox(
                 height: 30.0,
               ),
               const Text(
@@ -136,28 +77,10 @@ class _HomeState extends State<Home> {
                 height: 10.0,
               ),
               Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 32.0),
-                // child: Text("$_myPosition"),
-                child: Text("Position : $locationMessage"),
-                // child: Text('${address}'),
+                padding: const EdgeInsets.symmetric(horizontal: 20.0),
+                child: Text("Latitude : $latitude , Longitude : $longitude"),
               ),
-              ElevatedButton(
-                onPressed: () async {
-                  getCurrentLocation();
-                  // _determinePosition();
-                  // Position position = await _getGeoLocationPosition();
-                  // setState(() {
-                  //   location =
-                  //       'lat:${position.latitude}, long:${position.longitude}';
-                  // });
-                  // getAddressFromLongLat(position);
-                },
-                child: const Text('Cek Koordinat'),
-                style: ElevatedButton.styleFrom(
-                    shape: new RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(20))),
-              ),
-              SizedBox(
+              const SizedBox(
                 height: 20,
               ),
               const Text(
@@ -167,7 +90,7 @@ class _HomeState extends State<Home> {
                   fontWeight: FontWeight.bold,
                 ),
               ),
-              SizedBox(
+              const SizedBox(
                 height: 15,
               ),
               Padding(
@@ -193,30 +116,28 @@ class _HomeState extends State<Home> {
                       package: 'com.google.android.apps.maps');
                   await intent.launch();
                 },
-                child: const Text("Cari Lokasi"),
                 style: ElevatedButton.styleFrom(
-                    shape: new RoundedRectangleBorder(
+                    shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(20))),
+                child: const Text("Cari Lokasi"),
               ),
-              SizedBox(
+              const SizedBox(
                 height: 10,
               ),
-              Container(
-                child: ElevatedButton(
-                  onPressed: () {
-                    _signOut().then(
-                      (value) => Navigator.of(context).pushReplacement(
-                        MaterialPageRoute(
-                          builder: (context) => Login(),
-                        ),
+              ElevatedButton(
+                onPressed: () {
+                  _signOut().then(
+                    (value) => Navigator.of(context).pushReplacement(
+                      MaterialPageRoute(
+                        builder: (context) => Login(),
                       ),
-                    );
-                  },
-                  child: Text('Log Out'),
-                  style: ElevatedButton.styleFrom(
-                      shape: new RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(20))),
-                ),
+                    ),
+                  );
+                },
+                child: const Text('Log Out'),
+                style: ElevatedButton.styleFrom(
+                    shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(20))),
               )
             ],
           ),
@@ -224,35 +145,4 @@ class _HomeState extends State<Home> {
       )),
     );
   }
-
-//   Future<void> _determinePosition() async {
-//     bool serviceEnabled;
-//     LocationPermission permission;
-
-//     serviceEnabled = await Geolocator.isLocationServiceEnabled();
-//     if (!serviceEnabled) {
-//       return Future.error('Location services belum aktif.');
-//     }
-
-//     permission = await Geolocator.checkPermission();
-//     if (permission == LocationPermission.denied) {
-//       permission = await Geolocator.requestPermission();
-//       if (permission == LocationPermission.denied) {
-//         return Future.error('Location permissions ditolak');
-//       }
-//     }
-
-//     if (permission == LocationPermission.deniedForever) {
-//       // Permissions are denied forever, handle appropriately.
-//       return Future.error(
-//           'Location permissions ditolak, gagal request permissions.');
-//     }
-
-//     // When we reach here, permissions are granted and we can
-//     // continue accessing the position of the device.
-//     // return await Geolocator.getCurrentPosition();
-//     Position myPosition = await Geolocator.getCurrentPosition();
-//     setState(() => _myPosition = myPosition);
-//   }
-// }
 }
