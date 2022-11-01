@@ -3,7 +3,7 @@ part of 'shared.dart';
 double defaultMargin = 25;
 const double defaultPadding = 16.0;
 
-Color redColor = Color.fromARGB(255, 250, 0, 0);
+Color blueColor = Colors.blueAccent;
 Color whiteColor = Colors.white;
 Color blackColor = Colors.black;
 Color greyColor = Colors.grey.shade300;

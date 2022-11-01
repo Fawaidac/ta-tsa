@@ -51,7 +51,7 @@ class _RegisterState extends State<Register> {
             gradient: LinearGradient(
           begin: Alignment.topCenter,
           end: Alignment.bottomCenter,
-          colors: [redColor, whiteColor],
+          colors: [blueColor, Colors.lightBlue, Colors.lightBlueAccent],
         )),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.center,
@@ -138,10 +138,14 @@ class _RegisterState extends State<Register> {
                 onPressed: () {
                   registerSubmit();
                 },
-                label: Text("Register", style: whiteTextStyle),
-                icon: Icon(Icons.keyboard_arrow_right_outlined),
+                label: Text("Register",
+                    style: whiteTextStyle.copyWith(color: blackColor)),
+                icon: Icon(
+                  Icons.keyboard_arrow_right_outlined,
+                  color: blackColor,
+                ),
                 style: ElevatedButton.styleFrom(
-                    backgroundColor: redColor,
+                    backgroundColor: whiteColor,
                     shape: new RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(20))),
               ),
@@ -163,7 +167,7 @@ class _RegisterState extends State<Register> {
                     child: Text(
                       "Login",
                       style: whiteTextStyle.copyWith(
-                          color: redColor, fontSize: 14),
+                          color: whiteColor, fontSize: 14),
                     ),
                     onPressed: () {
                       Navigator.push(context,

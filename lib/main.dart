@@ -1,7 +1,9 @@
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
-import 'package:ta_tsa/Screen/Home.dart';
+import 'package:location/location.dart';
+import 'package:ta_tsa/Screen/Location.dart';
 import 'package:ta_tsa/Screen/Login.dart';
+import 'package:ta_tsa/Screen/NavButton.dart';
 import 'package:ta_tsa/Shared/shared.dart';
 
 Future<void> main() async {
@@ -19,8 +21,8 @@ class MyApp extends StatelessWidget {
         debugShowCheckedModeBanner: false,
         title: 'Flutter Demo',
         theme: ThemeData(
-            primarySwatch: Colors.red,
-            primaryColor: Colors.red,
+            primarySwatch: Colors.blue,
+            primaryColor: Colors.blue,
             scaffoldBackgroundColor: Colors.white,
             textTheme:
                 Theme.of(context).textTheme.apply(displayColor: blackColor)),
@@ -43,7 +45,7 @@ class Wellcome extends StatelessWidget {
             Text(
               "Wellcome to my applications",
               style: whiteTextStyle.copyWith(
-                  fontSize: 32, color: redColor, fontWeight: FontWeight.bold),
+                  fontSize: 32, color: blueColor, fontWeight: FontWeight.bold),
             ),
             Spacer(),
             Center(
@@ -55,7 +57,7 @@ class Wellcome extends StatelessWidget {
                 label: Text("Get Started", style: whiteTextStyle),
                 icon: Icon(Icons.arrow_right_alt_outlined),
                 style: ElevatedButton.styleFrom(
-                    backgroundColor: redColor,
+                    backgroundColor: blueColor,
                     shape: new RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(20))),
               ),
