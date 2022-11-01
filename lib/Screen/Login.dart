@@ -1,6 +1,6 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:ta_tsa/Screen/Home.dart';
+import 'package:ta_tsa/Screen/NavButton.dart';
 import 'package:ta_tsa/Screen/Register.dart';
 import 'package:ta_tsa/Shared/shared.dart';
 
@@ -25,16 +25,11 @@ class _LoginState extends State<Login> {
           .then(
             (value) => Navigator.of(context).pushReplacement(
               MaterialPageRoute(
-                builder: (context) => Home(),
+                builder: (context) => NavBar(),
               ),
             ),
           );
-      // await FirebaseAuth.instance.signInWithEmailAndPassword(
-      //     email: emailController.text.trim(),
-      //     password: passwordController.text.trim());
     } catch (e) {
-      // print(e);
-      // SnackBar(content: Text(e.toString()));
       const snackBar = SnackBar(
         content: Text('Password dan username salah!'),
       );
@@ -43,13 +38,12 @@ class _LoginState extends State<Login> {
     }
   }
 
-  // @override
-  // void dispose() {
-  //   // TODO: implement dispose
-  //   emailController.dispose();
-  //   passwordController.dispose();
-  //   super.dispose();
-  // }
+  @override
+  void dispose() {
+    emailController.dispose();
+    passwordController.dispose();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -62,14 +56,14 @@ class _LoginState extends State<Login> {
             gradient: LinearGradient(
           begin: Alignment.topCenter,
           end: Alignment.bottomCenter,
-          colors: [redColor, whiteColor],
+          colors: [blueColor, Colors.lightBlue, Colors.lightBlueAccent],
         )),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.center,
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             Text(
-              "LOGIN",
+              "Login",
               style: whiteTextStyle.copyWith(
                   fontSize: 28, fontWeight: FontWeight.bold),
             ),
@@ -126,10 +120,14 @@ class _LoginState extends State<Login> {
                 onPressed: () {
                   _loginSubmit();
                 },
-                label: Text("Login kids", style: whiteTextStyle),
-                icon: Icon(Icons.keyboard_arrow_right_outlined),
+                label: Text("Login kids",
+                    style: whiteTextStyle.copyWith(color: blackColor)),
+                icon: Icon(
+                  Icons.keyboard_arrow_right_outlined,
+                  color: blackColor,
+                ),
                 style: ElevatedButton.styleFrom(
-                    backgroundColor: redColor,
+                    backgroundColor: whiteColor,
                     shape: new RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(20))),
               ),
@@ -151,7 +149,7 @@ class _LoginState extends State<Login> {
                     child: Text(
                       "Register",
                       style: whiteTextStyle.copyWith(
-                          color: redColor, fontSize: 14),
+                          color: whiteColor, fontSize: 14),
                     ),
                     onPressed: () {
                       Navigator.push(context,
