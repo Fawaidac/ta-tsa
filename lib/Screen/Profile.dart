@@ -53,7 +53,7 @@ class _ProfileState extends State<Profile> {
             backgroundColor: blueColor,
             centerTitle: true,
             title: Text(
-              'Profil',
+              '${auth.currentUser!.email}',
               style: whiteTextStyle.copyWith(
                   fontSize: 20, fontWeight: FontWeight.bold),
             ),
@@ -75,16 +75,16 @@ class _ProfileState extends State<Profile> {
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                Text(
-                  '${auth.currentUser!.email}',
-                  style: whiteTextStyle.copyWith(
-                      fontSize: 16,
-                      fontWeight: FontWeight.bold,
-                      color: blackColor),
-                ),
-                SizedBox(
-                  height: 20,
-                ),
+                // Text(
+                //   '${auth.currentUser!.email}',
+                //   style: whiteTextStyle.copyWith(
+                //       fontSize: 16,
+                //       fontWeight: FontWeight.bold,
+                //       color: blackColor),
+                // ),
+                // SizedBox(
+                //   height: 20,
+                // ),
                 Expanded(
                   child: FutureBuilder(
                       future: getDocId(),
