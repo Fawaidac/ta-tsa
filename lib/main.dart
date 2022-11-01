@@ -1,9 +1,8 @@
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
-import 'package:location/location.dart';
-import 'package:ta_tsa/Screen/Location.dart';
+
 import 'package:ta_tsa/Screen/Login.dart';
-import 'package:ta_tsa/Screen/NavButton.dart';
+
 import 'package:ta_tsa/Shared/shared.dart';
 
 Future<void> main() async {
@@ -58,7 +57,7 @@ class Wellcome extends StatelessWidget {
                 icon: Icon(Icons.arrow_right_alt_outlined),
                 style: ElevatedButton.styleFrom(
                     backgroundColor: blueColor,
-                    shape: new RoundedRectangleBorder(
+                    shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(20))),
               ),
             )

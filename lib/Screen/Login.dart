@@ -67,7 +67,7 @@ class _LoginState extends State<Login> {
               style: whiteTextStyle.copyWith(
                   fontSize: 28, fontWeight: FontWeight.bold),
             ),
-            SizedBox(
+            const SizedBox(
               height: 20,
             ),
             Padding(
@@ -89,7 +89,7 @@ class _LoginState extends State<Login> {
                         ),
                       ),
                     ])),
-            SizedBox(
+            const SizedBox(
               height: 10,
             ),
             Padding(
@@ -112,7 +112,7 @@ class _LoginState extends State<Login> {
                         ),
                       ),
                     ])),
-            SizedBox(
+            const SizedBox(
               height: 20,
             ),
             Center(
@@ -128,11 +128,11 @@ class _LoginState extends State<Login> {
                 ),
                 style: ElevatedButton.styleFrom(
                     backgroundColor: whiteColor,
-                    shape: new RoundedRectangleBorder(
+                    shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(20))),
               ),
             ),
-            SizedBox(
+            const SizedBox(
               height: 10,
             ),
             Padding(

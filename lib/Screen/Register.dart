@@ -2,6 +2,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:ta_tsa/Screen/Login.dart';
 import 'package:ta_tsa/Shared/shared.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 
 class Register extends StatefulWidget {
   const Register({super.key});
@@ -12,32 +13,46 @@ class Register extends StatefulWidget {
 
 class _RegisterState extends State<Register> {
   TextEditingController passwordController = TextEditingController();
-  TextEditingController confirmpassController = TextEditingController();
   TextEditingController emailController = TextEditingController();
+  TextEditingController namaController = TextEditingController();
+  TextEditingController teleponController = TextEditingController();
 
   final FirebaseAuth _firebaseAuth = FirebaseAuth.instance;
+  final FirebaseFirestore _firestore = FirebaseFirestore.instance;
 
-  registerSubmit() async {
+  Future registerSubmit() async {
     try {
-      if (passwordController.text.trim() == confirmpassController.text.trim()) {
-        await _firebaseAuth
-            .createUserWithEmailAndPassword(
-                email: emailController.text.toString().trim(),
-                password: passwordController.text)
-            .then(
-              (value) => Navigator.of(context).pushReplacement(
-                MaterialPageRoute(
-                  builder: (context) => const Login(),
-                ),
-              ),
-            );
-      }
+      await _firebaseAuth.createUserWithEmailAndPassword(
+          email: emailController.text.toString().trim(),
+          password: passwordController.text.toString().trim());
+
+      addUserDetails(emailController.text.trim(), namaController.text.trim(),
+          teleponController.text.trim(), passwordController.text.trim());
     } catch (e) {
       const snackBar = SnackBar(
         content: Text('Format Username atau Password salah!'),
       );
       ScaffoldMessenger.of(context).showSnackBar(snackBar);
     }
+  }
+
+  @override
+  void dispose() {
+    emailController.dispose();
+    passwordController.dispose();
+    namaController.dispose();
+    teleponController.dispose();
+    super.dispose();
+  }
+
+  Future addUserDetails(
+      String email, String namalengkap, String telepon, String password) async {
+    await _firestore.collection('Users').add({
+      'email': email,
+      'nama lengkap': namalengkap,
+      'telepon': telepon,
+      'password': password,
+    });
   }
 
   @override
@@ -62,7 +77,7 @@ class _RegisterState extends State<Register> {
               style: whiteTextStyle.copyWith(
                   fontSize: 28, fontWeight: FontWeight.bold),
             ),
-            SizedBox(
+            const SizedBox(
               height: 20,
             ),
             Padding(
@@ -84,7 +99,51 @@ class _RegisterState extends State<Register> {
                         ),
                       ),
                     ])),
-            SizedBox(
+            const SizedBox(
+              height: 10,
+            ),
+            Padding(
+                padding: EdgeInsets.fromLTRB(20, 0, 20, 0),
+                child: Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    children: [
+                      TextField(
+                        textInputAction: TextInputAction.next,
+                        controller: namaController,
+                        decoration: InputDecoration(
+                          border: OutlineInputBorder(
+                              borderRadius: BorderRadius.circular(15),
+                              borderSide: BorderSide.none),
+                          filled: true,
+                          fillColor: Colors.white,
+                          hintText: "Nama Lengkap",
+                        ),
+                      ),
+                    ])),
+            const SizedBox(
+              height: 10,
+            ),
+            Padding(
+                padding: EdgeInsets.fromLTRB(20, 0, 20, 0),
+                child: Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    children: [
+                      TextField(
+                        textInputAction: TextInputAction.next,
+                        controller: teleponController,
+                        decoration: InputDecoration(
+                          border: OutlineInputBorder(
+                              borderRadius: BorderRadius.circular(15),
+                              borderSide: BorderSide.none),
+                          filled: true,
+                          fillColor: Colors.white,
+                          hintText: "Telepon",
+                        ),
+                      ),
+                    ])),
+            const SizedBox(
               height: 10,
             ),
             Padding(
@@ -107,30 +166,7 @@ class _RegisterState extends State<Register> {
                         ),
                       ),
                     ])),
-            SizedBox(
-              height: 10,
-            ),
-            Padding(
-                padding: EdgeInsets.fromLTRB(20, 0, 20, 0),
-                child: Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    crossAxisAlignment: CrossAxisAlignment.center,
-                    children: [
-                      TextField(
-                        textInputAction: TextInputAction.done,
-                        obscureText: true,
-                        controller: confirmpassController,
-                        decoration: InputDecoration(
-                          border: OutlineInputBorder(
-                              borderRadius: BorderRadius.circular(15),
-                              borderSide: BorderSide.none),
-                          filled: true,
-                          fillColor: Colors.white,
-                          hintText: "Confirm Password",
-                        ),
-                      ),
-                    ])),
-            SizedBox(
+            const SizedBox(
               height: 20,
             ),
             Center(
@@ -146,11 +182,11 @@ class _RegisterState extends State<Register> {
                 ),
                 style: ElevatedButton.styleFrom(
                     backgroundColor: whiteColor,
-                    shape: new RoundedRectangleBorder(
+                    shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(20))),
               ),
             ),
-            SizedBox(
+            const SizedBox(
               height: 10,
             ),
             Padding(
