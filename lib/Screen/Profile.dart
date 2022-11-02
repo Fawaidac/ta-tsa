@@ -2,7 +2,6 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:ta_tsa/Contr/get_username.dart';
-import 'package:ta_tsa/Contr/item_card.dart';
 import 'package:ta_tsa/Screen/Login.dart';
 import 'package:ta_tsa/Shared/shared.dart';
 
@@ -47,13 +46,14 @@ class _ProfileState extends State<Profile> {
     if (auth.currentUser != null) {
       print(auth.currentUser!.email);
     }
+
     return Scaffold(
         appBar: AppBar(
             automaticallyImplyLeading: false,
             backgroundColor: blueColor,
             centerTitle: true,
             title: Text(
-              '${auth.currentUser!.email}',
+              'Profile',
               style: whiteTextStyle.copyWith(
                   fontSize: 20, fontWeight: FontWeight.bold),
             ),
@@ -75,16 +75,19 @@ class _ProfileState extends State<Profile> {
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                // Text(
-                //   '${auth.currentUser!.email}',
-                //   style: whiteTextStyle.copyWith(
-                //       fontSize: 16,
-                //       fontWeight: FontWeight.bold,
-                //       color: blackColor),
-                // ),
-                // SizedBox(
-                //   height: 20,
-                // ),
+                Padding(
+                  padding: const EdgeInsets.only(top: 20.0),
+                  child: Text(
+                    '${auth.currentUser!.email}',
+                    style: whiteTextStyle.copyWith(
+                        fontSize: 16,
+                        fontWeight: FontWeight.bold,
+                        color: blackColor),
+                  ),
+                ),
+                SizedBox(
+                  height: 20,
+                ),
                 Expanded(
                   child: FutureBuilder(
                       future: getDocId(),

@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:ta_tsa/Screen/Dashboard.dart';
 import 'package:ta_tsa/Screen/Location.dart';
+import 'package:ta_tsa/Screen/Profil.dart';
 import 'package:ta_tsa/Screen/Profile.dart';
+import 'package:ta_tsa/Screen/Setting.dart';
 import 'package:ta_tsa/Shared/shared.dart';
 
 class NavBar extends StatefulWidget {

@@ -1,13 +1,21 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:ta_tsa/Shared/shared.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 
 class GetUserName extends StatelessWidget {
   final String documentId;
   GetUserName({required this.documentId});
-
+  TextEditingController password = TextEditingController();
+  TextEditingController nama = TextEditingController();
+  TextEditingController telepon = TextEditingController();
+  final firebase = FirebaseFirestore.instance;
   @override
   Widget build(BuildContext context) {
+    FirebaseAuth auth = FirebaseAuth.instance;
+    if (auth.currentUser != null) {
+      print(auth.currentUser!.email);
+    }
     //getcollection
     CollectionReference Users = FirebaseFirestore.instance.collection('Users');
     return FutureBuilder<DocumentSnapshot>(
@@ -21,18 +29,50 @@ class GetUserName extends StatelessWidget {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Text(
-                    'Nama : ${data['nama lengkap']}' +
-                        ', ' +
-                        'Email : ${data['email']}' +
-                        ', ' +
-                        'Telepon : ${data['telepon']}' +
-                        ', ' +
-                        'Password : ${data['password']}',
-                    style: whiteTextStyle.copyWith(color: blackColor),
+                  Padding(
+                    padding: const EdgeInsets.symmetric(vertical: 8),
+                    child: Text(
+                      'Nama : ${data['nama']}' +
+                          ', ' +
+                          'Email : ${data['email']}' +
+                          ', ' +
+                          'Telepon : ${data['telepon']}' +
+                          ', ' +
+                          'Password : ${data['password']}',
+                      style: whiteTextStyle.copyWith(color: blackColor),
+                    ),
                   ),
-                  TextButton(child: Text("Edit"), onPressed: () {}),
-                  TextButton(child: Text("Delete"), onPressed: () {}),
+                  Row(
+                    children: [
+                      SizedBox(
+                        height: 30,
+                        width: 30,
+                        child: FloatingActionButton(
+                            backgroundColor: Colors.green,
+                            child: Center(
+                                child: Icon(
+                              Icons.edit,
+                              color: Colors.white,
+                            )),
+                            onPressed: () {}),
+                      ),
+                      SizedBox(
+                        width: 20,
+                      ),
+                      SizedBox(
+                        height: 30,
+                        width: 30,
+                        child: FloatingActionButton(
+                            backgroundColor: Colors.red,
+                            child: Center(
+                                child: Icon(
+                              Icons.delete,
+                              color: Colors.white,
+                            )),
+                            onPressed: () {}),
+                      ),
+                    ],
+                  )
                 ],
               ),
             );
